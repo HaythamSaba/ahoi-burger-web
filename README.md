@@ -20,11 +20,10 @@ npm run build
 npm start
 ```
 
-Lint and tests:
+Lint:
 
 ```bash
 npm run lint
-npm test           # unit tests for the mapper and formatting (Vitest)
 ```
 
 ## Platforms
@@ -42,8 +41,7 @@ src/
 │   ├── models.ts    # Clean domain models used by the UI (Burger, Drink, Restaurant)
 │   ├── mapper.ts    # DTO -> domain model: validates values, IDs, availability, defaults
 │   ├── api.ts       # Fetches restaurant.json (cached, revalidated every 5 minutes)
-│   ├── format.ts    # Pure display helpers (price, weight, capitalization)
-│   └── *.test.ts    # Unit tests for the mapper and format helpers
+│   └── format.ts    # Pure display helpers (price, weight, capitalization)
 ├── components/
 │   ├── BurgerCard.tsx      # Burger card on the overview
 │   ├── DrinkCard.tsx       # Drink tile in the horizontal drinks row
