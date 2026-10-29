@@ -6,7 +6,7 @@ export default async function Home() {
   const { name, address, burgers, drinks } = await getRestaurant();
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+    <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
       <header className="mb-8">
         <h1 className="text-4xl font-bold tracking-tight">{name}</h1>
         {address && <p className="mt-1 text-lg">{address}</p>}
@@ -18,9 +18,9 @@ export default async function Home() {
             Burgers
           </h2>
           <ul className="grid gap-5 md:grid-cols-2">
-            {burgers.map((burger) => (
+            {burgers.map((burger, index) => (
               <li key={burger.id}>
-                <BurgerCard burger={burger} />
+                <BurgerCard burger={burger} preload={index === 0} />
               </li>
             ))}
           </ul>

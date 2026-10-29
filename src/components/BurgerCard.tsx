@@ -3,7 +3,13 @@ import Link from "next/link";
 import type { Burger } from "@/lib/models";
 import { formatPrice, formatWeight } from "@/lib/format";
 
-export function BurgerCard({ burger }: { burger: Burger }) {
+interface Props {
+  burger: Burger;
+  /** Preload the image; use for the first card, which is the LCP element. */
+  preload?: boolean;
+}
+
+export function BurgerCard({ burger, preload = false }: Props) {
   const price = formatPrice(burger.priceUsd);
   const weight = formatWeight(burger.weightGrams);
   const unavailable = !burger.isAvailable;
@@ -19,6 +25,7 @@ export function BurgerCard({ burger }: { burger: Burger }) {
             src={burger.imageUrl}
             alt=""
             fill
+            preload={preload}
             sizes="(min-width: 768px) 480px, 100vw"
             className={`object-cover ${unavailable ? "grayscale" : ""}`}
           />

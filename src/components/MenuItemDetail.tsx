@@ -58,7 +58,7 @@ export function MenuItemDetail({ item, restaurantName }: Props) {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-3xl px-4 py-6">
+      <main className="mx-auto w-full max-w-3xl px-4 py-6">
         {!item.isAvailable && (
           <p
             role="status"
@@ -74,7 +74,7 @@ export function MenuItemDetail({ item, restaurantName }: Props) {
               src={item.imageUrl}
               alt={name}
               fill
-              priority
+              preload
               sizes="(min-width: 768px) 768px, 100vw"
               className={`object-cover ${item.isAvailable ? "" : "grayscale"}`}
             />
