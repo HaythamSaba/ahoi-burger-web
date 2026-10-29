@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { RestaurantDto } from "./dto";
 import type { MenuItem, Restaurant } from "./models";
 import { mapRestaurant } from "./mapper";
@@ -5,7 +6,11 @@ import { mapRestaurant } from "./mapper";
 const RESTAURANT_URL =
   "https://ahoi-production-bucket-public.s3.eu-central-1.amazonaws.com/challenge/assets/restaurant.json";
 
-export async function getRestaurant(): Promise<Restaurant> {
+/**
+ * Fetches and maps the restaurant once per request. Without cache(), the page
+ * and its generateMetadata would each map the data with their own "now".
+ */
+export const getRestaurant = cache(async (): Promise<Restaurant> => {
   const res = await fetch(RESTAURANT_URL, { next: { revalidate: 300 } });
 
   if (!res.ok) {
@@ -19,7 +24,7 @@ export async function getRestaurant(): Promise<Restaurant> {
 
   // Only the top-level shape is checked here; the mapper validates each field.
   return mapRestaurant(data as RestaurantDto);
-}
+});
 
 export async function getMenuItem(
   kind: MenuItem["kind"],
