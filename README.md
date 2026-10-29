@@ -6,7 +6,7 @@ Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript (strict)** an
 
 ## Getting started
 
-Requirements: Node.js 20+.
+Requirements: Node.js 20.9+.
 
 ```bash
 npm install
@@ -28,7 +28,7 @@ npm run lint
 
 ## Platforms
 
-The challenge asks for at least two platforms. This submission implements **web only**. I chose to spend the available time on one platform done properly (data layer, states, accessibility, responsiveness) rather than two platforms done partially.
+The challenge asks for at least two platforms. Given the 3-hour time limit, I implemented **web only** (Next.js) and chose to spend the time on one platform done properly (data layer, states, accessibility, responsiveness) rather than two platforms done partially.
 
 The architecture is set up so a second platform could reuse the same ideas: the domain model (`src/lib/models.ts`) and the mapping rules (`src/lib/mapper.ts`) are plain TypeScript with no React or Next.js dependency. A React Native app could reuse them directly; a native iOS/Android app would port the same model and mapping rules to Swift/Kotlin.
 
@@ -71,7 +71,7 @@ All pages are React Server Components: the data is fetched on the server and the
 The JSON has several inconsistencies and the mockups don't match the data. These are the assumptions made in the code:
 
 **Data**
-- **IDs:** items have no IDs, so the URL ID is derived from the name (`"Big Burger"` → `big-burger`). If two items have the same name, the second one gets a suffix (`big-burger-2`); a name without latin letters or digits falls back to its position (`item-3`). Burgers and drinks have separate URLs, so they can share an ID.
+- **IDs:** items have no IDs, so the URL ID is derived from the name (`"Big Burger"` → `big-burger`). Accents are removed (`"Café"` → `cafe`). If two items have the same name, the second one gets a suffix (`big-burger-2`); a name without latin letters or digits falls back to its position (`item-3`). Burgers and drinks have separate URLs, so they can share an ID.
 - **Drink prices** have no currency; they are assumed to be **USD**, like the burgers.
 - **Prices** are always shown with two decimals (`9` → `9.00 USD`, `7.5` → `7.50 USD`).
 - **Drink names** are lowercase in the data (`"Long island ice tea"`) and are shown in title case (`"Long Island Ice Tea"`), as in the mockup.
@@ -84,13 +84,16 @@ The JSON has several inconsistencies and the mockups don't match the data. These
 - A burger is **unavailable** if `in_stock` is `false`, or the current date is before `availableSince` (Unix timestamp in ms) or after `available_until` (ISO date).
 - A missing `in_stock` counts as in stock; missing dates mean no time limit; invalid dates are ignored.
 - Drinks have no availability data and are always available.
-- Availability is evaluated on the server and cached together with the data, so it can be up to 5 minutes out of date.
+- Availability is evaluated on the server when a page is generated. Pages are regenerated in the background at most every 5 minutes, so the first visit after that may still see the previous state.
 
 **Mockups vs. data**
 - The mockups use placeholder content that differs from the JSON (address, prices, weights, which burger is unavailable). The app always shows the **real data**. For example, Big Burger is shown as unavailable because its `available_until` is 2021-12-12, and Chicken Burger because `in_stock` is `false`.
 
 ## AI usage
 
-<!-- TODO: describe honestly how you used AI tools, e.g.: -->
-<!-- - Which tools (e.g. Claude Code) and for which parts (review, debugging, README draft, ...) -->
-<!-- - What you wrote yourself and what you reviewed/changed -->
+I used AI tools as an assistant throughout this challenge:
+
+- **Claude (chat):** helped me plan the work within the 3-hour limit, analyse the inconsistencies in `restaurant.json`, and draft much of the code (data layer, components, pages). I built it up file by file, running and testing each step.
+- **Claude Code:** reviewed the finished project against the challenge requirements, found issues (e.g. the desktop layout collapsing, the error retry not re-fetching, missing runtime validation), applied the fixes I selected, and drafted this README.
+
+I set up the project, debugged the setup problems (folder structure, Tailwind configuration), tested the app on mobile and desktop, chose which review suggestions to apply, and reviewed all code and assumptions. I understand every part of the code and can explain the decisions behind it.
