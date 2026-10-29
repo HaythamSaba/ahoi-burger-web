@@ -5,6 +5,12 @@ import { MenuItemDetail } from "@/components/MenuItemDetail";
 
 type Props = { params: Promise<{ id: string }> };
 
+/** Pre-renders every burger at build time; new burgers are rendered on demand. */
+export async function generateStaticParams() {
+  const { burgers } = await getRestaurant();
+  return burgers.map(({ id }) => ({ id }));
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const item = await getMenuItem("burger", id);

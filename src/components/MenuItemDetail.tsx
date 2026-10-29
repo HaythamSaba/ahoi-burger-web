@@ -50,9 +50,18 @@ export function MenuItemDetail({ item, restaurantName }: Props) {
               href="/"
               className="flex items-center gap-1 rounded text-sky-400 hover:text-sky-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
             >
-              <span aria-hidden className="text-2xl leading-none">
-                ‹
-              </span>
+              <svg
+                aria-hidden
+                viewBox="0 0 12 21"
+                className="h-5 w-3 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M10 2 2 10.5l8 8.5" />
+              </svg>
               <span className="truncate">{restaurantName}</span>
             </Link>
           </nav>

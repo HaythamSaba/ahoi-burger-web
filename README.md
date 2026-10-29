@@ -59,7 +59,7 @@ src/
 
 Data flows in one direction: **fetch → DTO → mapper → domain model → components**. All API quirks (mixed naming, different shapes for burgers and drinks, missing fields) are handled in the mapper, so the components only deal with a consistent model. The mapper also checks every value at runtime, because the TypeScript types can't guarantee what the server actually sends.
 
-All pages are React Server Components: the data is fetched on the server and the browser receives ready HTML. The only client component is the error boundary, which Next.js requires. Images use `next/image` for responsive sizes and lazy loading.
+All pages are React Server Components: the data is fetched on the server and the browser receives ready HTML. The only client component is the error boundary, which Next.js requires. The overview and every detail page are pre-rendered at build time and refreshed in the background every 5 minutes (ISR); menu items added later are rendered on their first visit, and unknown IDs return a 404. Images use `next/image` for responsive sizes and lazy loading.
 
 ## Design decisions
 

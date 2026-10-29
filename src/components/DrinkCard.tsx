@@ -7,7 +7,7 @@ export function DrinkCard({ drink }: { drink: Drink }) {
   return (
     <Link
       href={`/drinks/${drink.id}`}
-      className="group block w-40 shrink-0 snap-start rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 sm:w-48"
+      className="group block w-32 shrink-0 snap-start rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 sm:w-48"
     >
       <div className="relative aspect-9/8 overflow-hidden rounded-xl bg-neutral-100">
         {drink.imageUrl && (
@@ -15,7 +15,7 @@ export function DrinkCard({ drink }: { drink: Drink }) {
             src={drink.imageUrl}
             alt=""
             fill
-            sizes="192px"
+            sizes="(min-width: 640px) 192px, 128px"
             className="object-cover transition-transform group-hover:scale-105"
           />
         )}
