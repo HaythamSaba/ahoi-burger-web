@@ -32,7 +32,7 @@ export default async function Home() {
           <h2 id="drinks-heading" className="mb-3 text-2xl font-bold">
             Drinks
           </h2>
-          <ul className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6">
+          <ul className="-mx-4 flex snap-x gap-4 scrollbar-none overflow-x-auto px-4 py-1 sm:-mx-6 sm:px-6">
             {drinks.map((drink) => (
               <li key={drink.id}>
                 <DrinkCard drink={drink} />

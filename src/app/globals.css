@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Hides the scrollbar but keeps the element scrollable (touch, trackpad, keyboard). */
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 body {
   background: #ffffff;
   color: #000000;
