@@ -12,8 +12,13 @@ export async function getRestaurant(): Promise<Restaurant> {
     throw new Error(`Failed to load restaurant data (HTTP ${res.status})`);
   }
 
-  const dto = (await res.json()) as RestaurantDto;
-  return mapRestaurant(dto);
+  const data: unknown = await res.json();
+  if (typeof data !== "object" || data === null) {
+    throw new Error("Unexpected restaurant data: not a JSON object");
+  }
+
+  // Only the top-level shape is checked here; the mapper validates each field.
+  return mapRestaurant(data as RestaurantDto);
 }
 
 export async function getMenuItem(

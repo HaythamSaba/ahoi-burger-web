@@ -20,10 +20,11 @@ npm run build
 npm start
 ```
 
-Lint:
+Lint and tests:
 
 ```bash
 npm run lint
+npm test           # unit tests for the mapper and formatting (Vitest)
 ```
 
 ## Platforms
@@ -39,9 +40,10 @@ src/
 ├── lib/
 │   ├── dto.ts       # Types that mirror the raw JSON exactly (snake_case, optional fields)
 │   ├── models.ts    # Clean domain models used by the UI (Burger, Drink, Restaurant)
-│   ├── mapper.ts    # DTO -> domain model: normalizes names, IDs, availability, defaults
+│   ├── mapper.ts    # DTO -> domain model: validates values, IDs, availability, defaults
 │   ├── api.ts       # Fetches restaurant.json (cached, revalidated every 5 minutes)
-│   └── format.ts    # Pure display helpers (price, weight, capitalization)
+│   ├── format.ts    # Pure display helpers (price, weight, capitalization)
+│   └── *.test.ts    # Unit tests for the mapper and format helpers
 ├── components/
 │   ├── BurgerCard.tsx      # Burger card on the overview
 │   ├── DrinkCard.tsx       # Drink tile in the horizontal drinks row
@@ -55,7 +57,7 @@ src/
     └── not-found.tsx         # Unknown item / URL
 ```
 
-Data flows in one direction: **fetch → DTO → mapper → domain model → components**. All API quirks (mixed naming, different shapes for burgers and drinks, missing fields) are handled in the mapper, so the components only deal with a consistent model.
+Data flows in one direction: **fetch → DTO → mapper → domain model → components**. All API quirks (mixed naming, different shapes for burgers and drinks, missing fields) are handled in the mapper, so the components only deal with a consistent model. The mapper also checks every value at runtime, because the TypeScript types can't guarantee what the server actually sends.
 
 All pages are React Server Components: the data is fetched on the server and the browser receives ready HTML. The only client component is the error boundary, which Next.js requires. Images use `next/image` for responsive sizes and lazy loading.
 
@@ -63,6 +65,7 @@ All pages are React Server Components: the data is fetched on the server and the
 
 - **Mobile-first.** Only iOS mockups were provided, so the layout follows them on small screens.
 - **No desktop design was provided.** On larger screens the content is centered with a maximum width, burgers are shown in a 2-column grid, and the drinks row stays horizontally scrollable.
+- **Drinks row without a scrollbar.** Like in the mockup, the row scrolls by swiping (or trackpad / keyboard) and the next drink is cut off at the edge to show that there is more.
 - **Web conventions over iOS conventions.** The detail page has an iOS-style top bar like the mockup, but navigation uses real links, so the browser back button, deep links and opening in a new tab all work.
 
 ## Assumptions
@@ -70,17 +73,18 @@ All pages are React Server Components: the data is fetched on the server and the
 The JSON has several inconsistencies and the mockups don't match the data. These are the assumptions made in the code:
 
 **Data**
-- **IDs:** items have no IDs, so the URL ID is derived from the name (`"Big Burger"` → `big-burger`).
+- **IDs:** items have no IDs, so the URL ID is derived from the name (`"Big Burger"` → `big-burger`). If two items have the same name, the second one gets a suffix (`big-burger-2`); a name without latin letters or digits falls back to its position (`item-3`). Burgers and drinks have separate URLs, so they can share an ID.
 - **Drink prices** have no currency; they are assumed to be **USD**, like the burgers.
 - **Prices** are always shown with two decimals (`9` → `9.00 USD`, `7.5` → `7.50 USD`).
 - **Drink names** are lowercase in the data (`"Long island ice tea"`) and are shown in title case (`"Long Island Ice Tea"`), as in the mockup.
 - **Tags** (`"bacon"`, `"tomatoes"`) are shown as **"Special ingredients"**, capitalized.
 - **Allergens** are shown as the codes from the data (`rr, xx, mm`), because no mapping to real allergen names was provided.
 - **Missing fields** are hidden instead of shown as empty: e.g. Fish Burger has no weight, so the weight stat is not shown; Coffee has no allergens, so the allergens section is not shown. Vegetarian is only shown when the field exists.
+- **Invalid values** (`null`, wrong types, negative prices or weights, empty strings) are treated as missing. Items without a name are skipped, because they can't be shown or linked. If the restaurant has no name, "Menu" is shown.
 
 **Availability**
 - A burger is **unavailable** if `in_stock` is `false`, or the current date is before `availableSince` (Unix timestamp in ms) or after `available_until` (ISO date).
-- A missing `in_stock` counts as in stock; missing dates mean no time limit; an invalid `available_until` date is ignored.
+- A missing `in_stock` counts as in stock; missing dates mean no time limit; invalid dates are ignored.
 - Drinks have no availability data and are always available.
 - Availability is evaluated on the server and cached together with the data, so it can be up to 5 minutes out of date.
 

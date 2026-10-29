@@ -43,27 +43,26 @@ export function MenuItemDetail({ item, restaurantName }: Props) {
 
   return (
     <>
-      <nav className="sticky top-0 z-10 border-b border-neutral-200 bg-neutral-50/90 backdrop-blur">
+      <header className="sticky top-0 z-10 border-b border-neutral-200 bg-neutral-50/90 backdrop-blur">
         <div className="mx-auto grid h-14 max-w-3xl grid-cols-[1fr_minmax(0,auto)_1fr] items-center px-4">
-          <Link
-            href="/"
-            className="flex items-center gap-1 justify-self-start text-sky-400 hover:text-sky-500"
-          >
-            <span aria-hidden className="text-2xl leading-none">
-              ‹
-            </span>
-            <span className="truncate">{restaurantName}</span>
-          </Link>
+          <nav className="min-w-0 justify-self-start">
+            <Link
+              href="/"
+              className="flex items-center gap-1 rounded text-sky-400 hover:text-sky-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+            >
+              <span aria-hidden className="text-2xl leading-none">
+                ‹
+              </span>
+              <span className="truncate">{restaurantName}</span>
+            </Link>
+          </nav>
           <h1 className="truncate text-center text-lg font-semibold">{name}</h1>
         </div>
-      </nav>
+      </header>
 
       <main className="mx-auto w-full max-w-3xl px-4 py-6">
         {!item.isAvailable && (
-          <p
-            role="status"
-            className="mb-4 rounded-lg bg-neutral-100 px-4 py-3 text-center font-medium"
-          >
+          <p className="mb-4 rounded-lg bg-neutral-100 px-4 py-3 text-center font-medium">
             Currently not available
           </p>
         )}
@@ -88,7 +87,7 @@ export function MenuItemDetail({ item, restaurantName }: Props) {
                 key={stat.label}
                 className="flex flex-col-reverse items-center"
               >
-                <dt className="text-sm text-neutral-400">{stat.label}</dt>
+                <dt className="text-sm text-neutral-500">{stat.label}</dt>
                 <dd className="text-2xl font-bold">{stat.value}</dd>
               </div>
             ))}
@@ -99,7 +98,7 @@ export function MenuItemDetail({ item, restaurantName }: Props) {
 
         {ingredients.length > 0 && (
           <section className="mt-6">
-            <h2 className="text-sm font-medium text-neutral-400">
+            <h2 className="text-sm font-medium text-neutral-500">
               Special ingredients
             </h2>
             <p className="mt-1 text-lg">{ingredients.join(", ")}</p>
@@ -108,7 +107,7 @@ export function MenuItemDetail({ item, restaurantName }: Props) {
 
         {item.allergens.length > 0 && (
           <section className="mt-6">
-            <h2 className="text-sm font-medium text-neutral-400">Allergens</h2>
+            <h2 className="text-sm font-medium text-neutral-500">Allergens</h2>
             <p className="mt-2 rounded-lg bg-orange-100 px-4 py-3 text-lg">
               {item.allergens.join(", ")}
             </p>
